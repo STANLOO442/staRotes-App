@@ -1,0 +1,23 @@
+:root {
+    --background-color: #ffc700;
+    --bs-primary-rgb: #12296c;
+}
+body{
+    font-family: 'poppin', sans-serif;
+    background-color: var(--background-color);
+    color: var(--bs-primary-rgb);
+    font-weight: 300;
+    font-size: 1.2rem;
+    background: url('/public/images/MicrosoftTeams-image.png');
+}
+h1 h2 h3 h4 h5 h6{
+    font-weight: 700;
+}
+.container-fluid-custom{
+    max-width: 1600px;
+}
+.btn{
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    border-radius: 2rem;
+}
