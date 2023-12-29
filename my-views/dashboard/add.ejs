@@ -1,0 +1,89 @@
+<!-- dashboard/add.ejs -->
+
+<div class="container-fluid container-fluid-custom pb-5 mb-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Hello, <%= locals.userName %></h1>
+        </div>
+        <div class="col text-end">
+            <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <form method="post" action="/dashboard/add" id="createNoteForm">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" autocomplete="current-title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" autocomplete="current-description" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Due Date</label>
+                    <input type="date" class="form-control" id="dueDate" name="dueDate">
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="Pending">Pending</option>
+                        <option value="InProgress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Note</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const createNoteForm = document.getElementById('createNoteForm');
+
+        if (createNoteForm) {
+            createNoteForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                // Get form data and serialize it
+                const formData = new FormData(createNoteForm);
+                const serializedFormData = new URLSearchParams(formData).toString();
+
+                // Make AJAX request with proper headers
+                // ... (existing code)
+
+fetch('/dashboard/add', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+})
+.then(response => response.json())
+.then(data => {
+    // Handle the response data
+    console.log("data", data);
+    // Example: Redirect to dashboard on successful note creation
+    if (data && data.noteId) {
+        console.log("yes");
+        window.location.href = '/dashboard';  // Redirect to the dashboard
+    } else {
+        console.error('Error creating note:', data.error || 'Unknown error');
+    }
+})
+.catch(error => {
+    // Handle errors
+    console.error('Error:', error);
+});
+
+// ... (existing code)
+
+            });
+        }
+    });
+</script>

@@ -12,12 +12,12 @@ export const seed = async () => {
 
     // Seed a user
     const user = await User.create({
-      fullname: "nonso Albert",
-      email: "oscar@gmail.com",
+      fullname: "Victor Boniface",
+      email: "bony@gmail.com",
       gender: "male",
-      phone: "08031338966",
+      phone: "08031228966",
       address: "50, orchid road",
-      password: "3450p"
+      password: "3450pro"
     });
 
     // Seed a note related to the user

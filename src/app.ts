@@ -3,26 +3,19 @@
 import express, { Request, Response, NextFunction } from 'express';
 import expressEjsLayouts from 'express-ejs-layouts';
 import path from 'path';
-import cookieParser from 'cookie-parser';
+import {Router} from 'express'
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import authController from './controller/authController';
 import authRoutes from './routes/authRoutes';
 import { authenticateToken } from './middleware/authMiddleware';
+import cookieParser from 'cookie-parser'; 
+import methodOverride from 'method-override';
 
 // Routes
-//  import indexRouter from './routes';
-//  import userRoutes from './routes/userRoute'; // Assuming you have a file named userRoute.ts in the routes folder
-
-// import dashboard from './routes/dashboard';
-// import loginRouter from './routes/login';
-// import authController from './controller/authController'
-// import notesRouter from './routes/noteRoute';
-// import signupRouter from './routes/signup';
-// import userRoute from './routes/userRoute';
-import { Sequelize } from 'sequelize';  // Import Sequelize instance and models
+ import authController from './controller/authController'
+import { Sequelize } from 'sequelize';  
 import morgan from 'morgan';
 
 const app = express();
@@ -30,6 +23,8 @@ const app = express();
 dotenv.config();
 
 
+
+app.use(cookieParser()); 
 // view engine setup
 app.use(expressEjsLayouts)
 app.set('views', path.join(__dirname,"../", 'my-views'));
@@ -39,16 +34,20 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname,'../', 'public')));
 
+
 // ...
 app.use(express.json());
-app.use('/auth', authRoutes);
+
+app.use('/', authRoutes);
 app.use('/auth', authenticateToken, authRoutes);
+app.use(methodOverride('_method'));
 app.use(cors());
 app.use(morgan('combined'))
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
 
 // Sequelize initialization
 const sequelize = new Sequelize({
@@ -81,19 +80,7 @@ const sequelize = new Sequelize({
 
 app.post('/signup', authController.signup);
 app.post('/login', authController.login);
-
-// Use your routes
-// app.use('/users', userRoutes);
 // app.use('/', authController)
-//  app.use('/', indexRouter);
-// app.use('/', dashboard);
-// app.use('/', loginRouter);
-// app.use('/', signupRouter); 
-// app.use('/notes', notesRouter);
-// app.use('/', userRoute);
-
-
-// ...
 
 
 export default app;

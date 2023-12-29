@@ -1,11 +1,12 @@
 "use strict";
-/**import express from 'express';
-import { signupPage, signupUser } from '../controller/signupController';
-
-const router = express.Router();
-
-/* GET Signup Page. */
-// router.get('/signup', signupPage);
-/* POST Signup */
-// router.post('/signup', signupUser);
-// export default router;**/
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
+//  GET Signup Page. 
+router.get('/signup');
+//  POST Signup */
+//  router.post('/signup', signupUser);
+exports.default = router;

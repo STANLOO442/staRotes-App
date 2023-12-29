@@ -1,0 +1,30 @@
+<!-- views/dashboard/delete.ejs -->
+<div class="container-fluid container-fluid-custom pb-5 mb-5">
+    <div class="row mb-4">
+      <div class="col">
+        <h1>Delete Note</h1>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card border-danger" style="min-height: 210px">
+          <div class="card-body text-decoration-none">
+            <h5 class="card-title"><%= locals.note.title %></h5>
+            <p class="card-text"><%= locals.note.content %></p><br><br>
+            <h6 class="card-title"><%= locals.note.description %></h6>
+            <h6 class="card-title"><%= locals.note.dueDate %></h6>
+            <h6 class="card-title"><%= locals.note.status %></h6>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <form action="/dashboard/delete/<%= locals.note.id %>" method="POST">
+          <p>Are you sure you want to delete this note?</p>
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+          <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  

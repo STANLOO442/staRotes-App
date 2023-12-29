@@ -1,4 +1,5 @@
 "use strict";
+// user.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,11 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// user.ts
-const db_config_1 = __importDefault(require("../config/db.config"));
-;
 const sequelize_1 = require("sequelize");
+const db_config_1 = __importDefault(require("../config/db.config"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const note_1 = __importDefault(require("./note"));
 class User extends sequelize_1.Model {
     // Other properties and methods...
     hashPassword() {
@@ -68,4 +68,7 @@ User.init({
     sequelize: db_config_1.default,
     modelName: 'User',
 });
+// Add the relationship
+User.hasMany(note_1.default, { foreignKey: 'userId' });
+note_1.default.belongsTo(User, { foreignKey: 'userId' });
 exports.default = User;

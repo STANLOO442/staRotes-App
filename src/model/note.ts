@@ -1,24 +1,25 @@
-// src/model/note.ts
+// note.ts
 
-/**import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db.config';
-const { v4: uuidv4 } = require('uuid');
-import  User  from './user'; // Import the User model
+import { DataTypes, Model } from 'sequelize';
 
 class Note extends Model {
   public id!: string;
   public title!: string;
   public description!: string;
-  public dueDate!: Date;
+  public dueDate!: string;
   public status!: string;
   public userId!: string;
+  public content!: string; // Add the content field
+
+  // Other properties and methods...
 }
 
 Note.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: () => uuidv4(),
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
@@ -30,8 +31,7 @@ Note.init(
       allowNull: false,
     },
     dueDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
+      type: DataTypes.STRING,
     },
     status: {
       type: DataTypes.STRING,
@@ -41,6 +41,10 @@ Note.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    content: {
+      type: DataTypes.TEXT, // Use TEXT for longer content
+      allowNull: true, // Make it nullable if not required
+    },
   },
   {
     sequelize,
@@ -48,9 +52,4 @@ Note.init(
   }
 );
 
-// Define the association: Note belongs to a User
-Note.belongsTo(User, { foreignKey: 'userId' });
-
-export default Note;**/
-
-
+export default Note;

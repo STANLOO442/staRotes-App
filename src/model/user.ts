@@ -1,8 +1,9 @@
 // user.ts
-import sequelize from '../config/db.config';;
-import sequelizeDb from '../config/db.config';
+
 import { DataTypes, Model } from 'sequelize';
+import sequelize from '../config/db.config';
 import bcrypt from 'bcrypt';
+import Note from './note';
 
 class User extends Model {
   public id!: string;
@@ -12,8 +13,10 @@ class User extends Model {
   public phone!: string;
   public address!: string;
   public password!: string;
+  
 
   // Other properties and methods...
+  
   async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 10);
   }
@@ -21,7 +24,6 @@ class User extends Model {
   async comparePassword(candidatePassword: string): Promise<boolean> {
     return bcrypt.compare(candidatePassword, this.password);
   }
-
 }
 
 User.init(
@@ -64,10 +66,11 @@ User.init(
     sequelize,
     modelName: 'User',
   }
-  
-  
 );
 
-
+// Add the relationship
+User.hasMany(Note, { foreignKey: 'userId' });
+Note.belongsTo(User, { foreignKey: 'userId' });
 
 export default User;
+

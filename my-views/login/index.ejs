@@ -7,19 +7,19 @@
           class="img-fluid" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form action="/login" method="post">
+        <form id="loginForm" action="/login" method="POST">
          
-          <!-- Fullname input -->
+          <!-- Email input -->
           <div class="form-outline mb-4">
-            <input type="text" id="form3Example3" class="form-control form-control-lg"
-              placeholder="Enter your fullname..." />
-            <label class="form-label" for="form3Example3">Fullname</label>
+            <input type="email" id="form3Example3" class="form-control form-control-lg"
+              placeholder="Enter your email..." name="email" autocomplete="current-email"/>
+            <label class="form-label" for="form3Example3">Email</label>
           </div>
         
           <!-- Password input -->
           <div class="form-outline mb-3">
             <input type="password" id="form3Example4" class="form-control form-control-lg"
-              placeholder="Enter password" />
+              placeholder="Enter password" name="password" autocomplete="current-password"/>
             <label class="form-label" for="form3Example4">Password</label>
           </div>
 
@@ -44,3 +44,48 @@
       </div>
     </div>
   </div>
+
+  <!-- my-views/login/index.ejs -->
+
+<!-- Your HTML content -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const loginForm = document.getElementById('loginForm');
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Get form data and serialize it
+        const formData = new FormData(loginForm);
+        const serializedFormData = new URLSearchParams(formData).toString();
+
+        // Make AJAX request with proper headers
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Set the content type to JSON
+          },
+          body: JSON.stringify(Object.fromEntries(formData)), // Convert formData to JSON
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Handle the response data
+            console.log(data);
+
+            // Example: Redirect to dashboard on successful login
+            if (data.token) {
+              window.location.href = '/dashboard';
+            }
+          })
+          .catch(error => {
+            // Handle errors
+            console.error('Error:', error);
+          });
+      });
+    }
+  });
+</script>
+
+<!-- Your HTML content -->

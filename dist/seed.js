@@ -22,12 +22,12 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_config_1.default.sync({ alter: true });
         // Seed a user
         const user = yield user_1.default.create({
-            fullname: "nonso Albert",
-            email: "oscar@gmail.com",
+            fullname: "Victor Boniface",
+            email: "bony@gmail.com",
             gender: "male",
-            phone: "08031338966",
+            phone: "08031228966",
             address: "50, orchid road",
-            password: "3450p"
+            password: "3450pro"
         });
         // Seed a note related to the user
         console.log("Data seeded successfully");

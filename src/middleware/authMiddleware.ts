@@ -1,23 +1,28 @@
-// authController.ts
-// authMiddleware.ts
-// authMiddleware.ts
+// src/middleware/authMiddleware.ts
 
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/db.config';
-import User  from '../model/user';
+import User from '../model/user';
 
-declare module 'express' {
-  interface Request {
-    user?: { id: string }; // Add other user properties as needed
-  }
+interface AuthenticatedUser {
+  id: string;
+  [key: string]: any; // Allow any additional user properties
 }
 
-export const authenticateToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+export const authenticateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  // Get the token from the cookies
+  const token = req.cookies.token;
+
+  // console.log('Token:', token);
 
   if (!token) {
-    console.error('Authorization token is missing'); res.status(401).json({ error: 'Authorization token is missing' });
+    console.error('Authorization token is missing');
+    res.status(401).json({ error: 'Authorization token is missing' });
     return;
   }
 
@@ -29,10 +34,15 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     if (!user) {
       console.error('User not found');
       res.status(401).json({ error: 'User not found' });
-      return ;
+      return;
     }
 
-    req.user = { id: user.id }; // Add other user properties as needed
+    // Include user properties in req.user
+    req.user = {
+      id: user.id,
+      ...user.get(), // Get all user properties
+    } as AuthenticatedUser;
+
     next();
   } catch (error) {
     console.error(error);
@@ -40,19 +50,12 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     if (error instanceof jwt.TokenExpiredError) {
       console.error('Authorization token has expired');
       res.status(401).json({ error: 'Authorization token has expired' });
-      return ;
     } else if (error instanceof jwt.JsonWebTokenError) {
       console.error('Invalid authorization token');
       res.status(401).json({ error: 'Invalid authorization token' });
-      return 
     } else {
       console.error('Authorization failed');
       res.status(401).json({ error: 'Authorization failed' });
-      return ;
     }
   }
 };
-
-
-// You can add more middleware functions as needed
-

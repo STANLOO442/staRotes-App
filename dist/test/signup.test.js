@@ -22,10 +22,10 @@ describe('Signup and Login', () => {
             .post('/signup')
             .send({
             fullname: 'John Doe',
-            email: 'john@example.com',
-            gender: 'm',
-            phone: '+2347085647535',
-            address: '1, rantech stop',
+            email: 'bony@gmail.com',
+            gender: 'male',
+            phone: '+2347085227535',
+            address: '15, rantech stop',
             password: 'password123',
         });
         expect(signupResponse.status).toBe(201);
@@ -33,7 +33,7 @@ describe('Signup and Login', () => {
         const loginResponse = yield (0, supertest_1.default)(app_1.default)
             .post('/login')
             .send({
-            fullname: 'John Doe',
+            email: 'bony@gmail.com',
             password: 'password123',
         });
         expect(loginResponse.status).toBe(200);

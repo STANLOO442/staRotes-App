@@ -1,0 +1,85 @@
+<div class="container">
+    <h1>Edit Note</h1>
+    <form action="/dashboard/edit/<%= locals.note.id %>" method="POST" id="editNoteForm">
+        <!-- Add a hidden input for the "_method" field to override the method -->
+        <input type="hidden" name="_method" value="PUT">
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= locals.note.title %>" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required><%= locals.note.description %></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="dueDate" class="form-label">Due Date:</label>
+            <input type="text" class="form-control" id="dueDate" name="dueDate" value="<%= locals.note.dueDate %>" placeholder="YYYY-MM-DD">
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <select class="form-select" id="status" name="status" required>
+                <option value="Pending" <%= locals.note.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="InProgress" <%= locals.note.status === 'InProgress' ? 'selected' : '' %>>In Progress</option>
+                <option value="Completed" <%= locals.note.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Content:</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required><%= locals.note.content %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+
+
+
+<!-- my-views/dashboard/edit.ejs -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editNoteForm = document.getElementById('editNoteForm');
+
+        if (editNoteForm) {
+            editNoteForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                // Get form data and serialize it
+                const formData = new FormData(editNoteForm);
+                const serializedFormData = new URLSearchParams(formData).toString();
+
+                // Extract noteId from the form action
+                const noteId = editNoteForm.action.split('/').pop();
+
+                // Make AJAX request with proper headers
+                fetch(`/dashboard/edit/${noteId}`, {
+                    method: 'POST', // Use POST method for updating the note
+                    headers: {
+                        'Content-Type': 'application/json', // Set the content type to JSON
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)), // Convert formData to JSON
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response data
+
+                        // Example: Redirect to dashboard on successful note update
+                        if (data.message === 'Note updated successfully') {
+                            window.location.href = '/dashboard';
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error:', error);
+                    });
+            });
+        }
+    });
+</script>
+
+
+

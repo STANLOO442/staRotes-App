@@ -30,27 +30,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_ejs_layouts_1 = __importDefault(require("express-ejs-layouts"));
 const path_1 = __importDefault(require("path"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
-const authController_1 = __importDefault(require("./controller/authController"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const authMiddleware_1 = require("./middleware/authMiddleware");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const method_override_1 = __importDefault(require("method-override"));
 // Routes
-//  import indexRouter from './routes';
-//  import userRoutes from './routes/userRoute'; // Assuming you have a file named userRoute.ts in the routes folder
-// import dashboard from './routes/dashboard';
-// import loginRouter from './routes/login';
-// import authController from './controller/authController'
-// import notesRouter from './routes/noteRoute';
-// import signupRouter from './routes/signup';
-// import userRoute from './routes/userRoute';
-const sequelize_1 = require("sequelize"); // Import Sequelize instance and models
+const authController_1 = __importDefault(require("./controller/authController"));
+const sequelize_1 = require("sequelize");
 const morgan_2 = __importDefault(require("morgan"));
 const app = (0, express_1.default)();
 dotenv.config();
+app.use((0, cookie_parser_1.default)());
 // view engine setup
 app.use(express_ejs_layouts_1.default);
 app.set('views', path_1.default.join(__dirname, "../", 'my-views'));
@@ -59,14 +53,16 @@ app.set('view engine', 'ejs');
 app.use(express_1.default.static(path_1.default.join(__dirname, '../', 'public')));
 // ...
 app.use(express_1.default.json());
-app.use('/auth', authRoutes_1.default);
+app.use('/', authRoutes_1.default);
 app.use('/auth', authMiddleware_1.authenticateToken, authRoutes_1.default);
+app.use((0, method_override_1.default)('_method'));
 app.use((0, cors_1.default)());
 app.use((0, morgan_2.default)('combined'));
 app.use((0, morgan_1.default)('dev'));
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use((0, cookie_parser_1.default)());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
+app.use(express_1.default.json());
 // Sequelize initialization
 const sequelize = new sequelize_1.Sequelize({
     dialect: 'sqlite',
@@ -92,14 +88,5 @@ sequelize.sync({ alter: true })
 // Use middleware
 app.post('/signup', authController_1.default.signup);
 app.post('/login', authController_1.default.login);
-// Use your routes
-// app.use('/users', userRoutes);
 // app.use('/', authController)
-//  app.use('/', indexRouter);
-// app.use('/', dashboard);
-// app.use('/', loginRouter);
-// app.use('/', signupRouter); 
-// app.use('/notes', notesRouter);
-// app.use('/', userRoute);
-// ...
 exports.default = app;
